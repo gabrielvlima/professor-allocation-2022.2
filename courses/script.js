@@ -15,13 +15,18 @@ async function getCourses() {
     const courses = await response.json();
 
     if (courses.length > 0) {
-      table.removeAttribute('hidden');
       courses.forEach((course) => {
         createRow(course);
       })
+
+      showTable();
     }
     
   }
+}
+
+function showTable() {
+  table.removeAttribute('hidden');
 }
 
 async function remover(id, name, row) {
@@ -63,6 +68,7 @@ async function adicionar() {
       inputName.value = "";
       removeModal();
       createRow(course);
+      showTable();
     }
   }
 }
@@ -103,11 +109,10 @@ function abrirModalAtualizar(courseId, name) {
 }
 
 function removeModal() {
-  const elements = document.getElementsByClassName('fade');
+  const modalElement = document.getElementById("form-course");
+  const modalBootstrap = bootstrap.Modal.getInstance(modalElement);
 
-  for(let i = 0; i < elements.length; i++) {
-    elements[i].classList.remove('show');
-  }
+  modalBootstrap.hide();
 }
 
 btnSalvar.addEventListener('click', salvar);
@@ -131,6 +136,7 @@ function createRow({id, name}) {
   btnDelete.classList.add('btn');
   btnDelete.classList.add('button-ghost');
   btnDelete.appendChild(imgDelete);
+  btnDelete.title = `Remover ${name}`;
 
   const btnEdit = document.createElement('button');
   btnEdit.setAttribute('data-bs-toggle', 'modal');
@@ -139,6 +145,7 @@ function createRow({id, name}) {
   btnEdit.classList.add('btn');
   btnEdit.classList.add('button-ghost');
   btnEdit.appendChild(imgEdit);
+  btnEdit.title = `Editar ${name}`;
 
   idCollumn.textContent = id;
   idCollumn.setAttribute("scope", "row");
